@@ -1,0 +1,32 @@
+body {
+        margin: 30px 30px 30px 30px;
+	background-color: lightcyan;
+        padding:30px;
+        border:10px;
+        border-color:black;
+}
+h1 {
+    background-color: lightseagreen;
+    text-decoration-color: white;
+    text-align: center;
+    font-family: arial;
+}
+
+table {
+    font-family: arial;
+    font-size: 15px;
+    border-color: black;
+}
+
+td {
+    width: 400px;
+    padding: 3px;
+}
+
+span.item {
+    font-weight: bold;
+}
+
+span.dado {
+    text-align: center;
+}
