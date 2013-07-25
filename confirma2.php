@@ -161,7 +161,7 @@
            $icont = 0;
            foreach($conteudoAr as $conteudoData) {
            echo "    <td>
-                           <input type=checkbox name=\"dataCont".$part."[]\" value=\"".$conteudoData."\"/>".$conteudoData."
+                           <input type=checkbox name=\"dataCont".$part."[]\" value=\"".$icont."\" >".$conteudoData."
                      </td>
                      <td>
                            <textarea name=\"conteudo".$part."[]\" rows=\"6\" cold=\"50\" wrap=\"off\">".$eventoAr[$icont]."</textarea>"."

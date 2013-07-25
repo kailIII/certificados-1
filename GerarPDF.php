@@ -23,7 +23,30 @@
         if ($tp == "1") $palavra = strtr(strtoupper($term),"àáâãäåæçèéêëìíîïðñòóôõö÷øùüúþÿ","ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÜÚÞß"); 
         elseif ($tp == "0") $palavra = strtr(strtolower($term),"ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÜÚÞß","àáâãäåæçèéêëìíîïðñòóôõö÷øùüúþÿ"); 
     return $palavra; 
-} 
+    } 
+    
+    function refinaArray($arrayAntiga) { //Função para remover valores vazios de uma textarea POST separada por \n e gerar outra
+        $novaArray = explode("\n", $arrayAntiga );
+        $i = 0;
+        foreach($novaArray as $p) {
+            if(strlen($p) <= 1)
+            {
+                unset($novaArray[$i]);//Remove do array cada participante sem nome
+            }
+            $i++;
+        }
+        array_values($novaArray);//Reorganiza a array
+        return $novaArray;
+    }
+    
+//    function organizaConteudoProgramatico($n) { //Função que organiza conteudos programaticos escolhidos, em forma de array - $n é numero do participante - de 1 a n
+//        $cont = 0;
+//        $posicaoArray = 0;
+//        foreach($_POST['dataCont'.$n] as $dataConteudo) {
+//            if
+//            $cont++;
+//        }
+//    }
     
     if($_SESSION["Login"] != "YES") {
         header("Location: index.php");
@@ -37,40 +60,43 @@
         $periodoAr = $_POST['periodo'];
         $cargaAr = $_POST['carga'];
         $funcaoAr = $_POST['funcao'];
+  
+        $participanteAr = refinaArray($_POST['participantes']);
+//        $participanteAr = explode("\n", $_POST['participantes']);//Cria uma array com cada participante
+//        $i = 0;
+//        foreach($participanteAr as $p) {
+//            if(strlen($p) <= 1)
+//            {
+//                unset($participanteAr[$i]);//Remove do array cada participante sem nome
+//            }
+//            $i++;
+//        }
+//        array_values($participanteAr);//Reorganiza a array
         
-        $participanteAr = explode("\n", $_POST['participantes']);//Cria uma array com cada participante
-        $i = 0;
-        foreach($participanteAr as $p) {
-            if(strlen($p) <= 1)
-            {
-                unset($participanteAr[$i]);//Remove do array cada participante sem nome
-            }
-            $i++;
-        }
-        array_values($participanteAr);//Reorganiza a array
-        
-        $ContProgAr = explode("\n", $_POST['contprogramatico']);//Cria uma array com cada participante
-        $i = 0;
-        foreach($ContProgAr as $p) {
-            if(strlen($p) <= 1)
-            {
-                unset($ContProgAr[$i]);//Remove do array cada participante sem nome
-            }
-            $i++;
-        }
-        array_values($ContProgAr);//Reorganiza a array
-        
-        $equipeAr = explode("\n", $_POST['equipe']);//Cria uma array com cada participante
-        $i = 0;
-        foreach($equipeAr as $e) {
-            if(strlen($e) <= 1)
-            {
-                unset($equipeAr[$i]);//Remove do array cada participante sem nome
-            }
-            $i++;
-        }
-        
-        array_values($equipeAr);//Reorganiza a array
+        $ContProgAr = refinaArray($_POST['contprogramatico']);
+//        $ContProgAr = explode("\n", $_POST['contprogramatico']);//Cria uma array com cada participante
+//        $i = 0;
+//        foreach($ContProgAr as $p) {
+//            if(strlen($p) <= 1)
+//            {
+//                unset($ContProgAr[$i]);//Remove do array cada participante sem nome
+//            }
+//            $i++;
+//        }
+//        array_values($ContProgAr);//Reorganiza a array
+//        
+  
+        $equipeAr = refinaArray($_POST['equipe']);
+//        $equipeAr = explode("\n", $_POST['equipe']);//Cria uma array com cada participante
+//        $i = 0;
+//        foreach($equipeAr as $e) {
+//            if(strlen($e) <= 1)
+//            {
+//                unset($equipeAr[$i]);//Remove do array cada participante sem nome
+//            }
+//            $i++;
+//        }
+//        array_values($equipeAr);//Reorganiza a array
         
         $textoPrincipal = $_POST['texto'];
         $textoPrincipal = str_replace( array( "{evento}", "{departamento}", ), 
@@ -112,19 +138,30 @@
             $pdf->Cell(167, 5, $data ,0,1,'R',false); //Adiciona a data da impressão no corpo do certificado
             $pdf->AddPage();
             $pdf->SetXY(15,30);
-            $dataContAr = count($_POST['dataCont'.$n]);
-            $dataContAr--;
-            for($c = 0 ; $c <= $dataContAr ; ++$c) {
-                if(isset($_POST['dataCont'.$n][$c])) {
-                    $pdf->SetFont('arial','BI','14');
-                    $pdf->MultiCell(110,6,utf8_decode($_POST['dataCont'.$n][$c]),0,'L');
-                    $pdf->SetX(15);
+            //if(isset($_POST['dataCont'.$n])) { //Se tiver algum conteudo programatico marcado
+                foreach($_POST['dataCont'.$n] as $key => $valor) {
+                    $pdf->SetFont('arial','BIU','14');
+                    $pdf->MultiCell(110,8,utf8_decode($ContProgAr[$valor]),0,'L');
+                    $pdf->SetX(20);
                     $pdf->SetFont('arial','','14');
-                    $pdf->MultiCell(110,6,utf8_decode($_POST['conteudo'.$n][$c]),5,'L');
+                    $pdf->MultiCell(110,8,utf8_decode($_POST['conteudo'.$n][$valor]),5,'L');
                     $pdf->SetXY(15,$pdf->GetY()+10);
                 }
-                $c++;
-            }
+            //}
+            
+//            $dataContAr = count($_POST['dataCont'.$n]);
+//            $dataContAr--;
+//            for($c = 0 ; $c <= $dataContAr ; ++$c) {
+//                if(isset($_POST['dataCont'.$n][$c])) {
+//                    $pdf->SetFont('arial','BI','14');
+//                    $pdf->MultiCell(110,6,utf8_decode($_POST['dataCont'.$n][$c]),0,'L');
+//                    $pdf->SetX(15);
+//                    $pdf->SetFont('arial','','14');
+//                    $pdf->MultiCell(110,6,utf8_decode($_POST['conteudo'.$n][$c]),5,'L');
+//                    $pdf->SetXY(15,$pdf->GetY()+10);
+//                }
+//                $c++;
+//            }
             
             //$pdf->MultiCell(110,5,$_POST['contprogramatico'],0,'C',false);
             $pdf->SetXY(154,30);
