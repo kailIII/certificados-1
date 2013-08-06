@@ -1,3 +1,14 @@
+<!DOCTYPE html>
+<?php
+
+    session_start();
+    
+    if($_SESSION["Login"] != "YES") {
+        header("Location: index.php");
+    }
+
+
+?>
 <html>
     <head>   
         <link rel="stylesheet" type="text/css" href="style.css" />
@@ -7,18 +18,37 @@
     <body>
         <table border="1" align="center" border-color="black">
         <?php 
-        $participanteAr = explode("\n", $_POST['participantes']);
-        $conteudoAr = explode("\n", $_POST['contprogramatico']);
-        $equipeAr = explode("\n", $_POST['equipe']);
+        
+    function refinaArray($arrayAntiga) { //Função para remover valores vazios de uma textarea POST separada por \n e gerar outra
+        $novaArray = explode("\n", $arrayAntiga );
         $i = 0;
-        foreach($participanteAr as $p) {
-            if(strlen($p) <= 1 )
+        foreach($novaArray as $p) {
+            if(strlen($p) <= 1)
             {
-                unset($participanteAr[$i]);
+                unset($novaArray[$i]);//Remove do array cada participante sem nome
             }
             $i++;
         }
-        array_values($participanteAr);
+        array_values($novaArray);//Reorganiza a array
+        return $novaArray;
+    }
+        
+//        $participanteAr = explode("\n", $_POST['participantes']);
+//        $conteudoAr = explode("\n", $_POST['contprogramatico']);
+//        $equipeAr = explode("\n", $_POST['equipe']);
+        $participanteAr = refinaArray($_POST['participantes']);
+        $dataConteudo = $_POST['contprogramatico'];
+        $equipeAr = refinaArray($_POST['equipe']);
+        
+//        $i = 0;
+//        foreach($participanteAr as $p) {
+//            if(strlen($p) <= 1 )
+//            {
+//                unset($participanteAr[$i]);
+//            }
+//            $i++;
+//        }
+//        array_values($participanteAr);
 
         
         echo "<h1>Confirme os dados já preenchidos</h1><br /><br />
@@ -52,16 +82,19 @@
         foreach ($participanteAr as $participante) {
             echo "<td>".$participante."</td></tr><tr>";            
         }
-        echo "</tr></span></tr>
-              <tr>
+        echo "</tr></span></tr>";
+        /* Titulo Conteudo Programatico Retirado
+        echo "  <tr>
                 <td rowspan=\"".count($conteudoAr)."\"><span class=\"item\">Conteúdo Programático:</span>
                 </td>
                 <span class=\"dado\">";
         foreach ($conteudoAr as $conteudo) {
             echo "<td>".$conteudo."</td></tr><tr>";
         }
-        echo "</tr></span></tr>
-              <tr>
+        echo "</tr></span></tr>;
+         * 
+         */
+        echo "  <tr>
                 <td rowspan=\"".count($equipeAr)."\"><span class=\"item\">Equipe Executora:</span>
                 </td>
                 <span class=\"dado\">";
@@ -113,6 +146,9 @@
                 <td>
                     <b>fls.</b>
                 </td>
+                <td>
+                    <b>Sob n°.</b>
+                </td>
             </tr>
             <form method=\"post\" action=\"confirma2.php\" >";
         
@@ -137,13 +173,16 @@
                     <input type="text" name="periodo[]" />
                 </td>
                 <td>
-                    <input type="text" name="carga[]" />
+                    <input type="text" name="carga[]" size="4" />
                 </td>
                 <td>
-                    <input type="text" name="num[]" />
+                    <input type="text" name="num[]" size="5" />
                 </td>
                 <td>
-                    <input type="text" name="fls[]" />
+                    <input type="text" name="fls[]" size="5" />
+                </td>
+                <td>
+                    <input type="text" name="sobnum[]" size="6" />
                 </td>
             </tr>
             <?php
@@ -183,46 +222,39 @@
         }
         
         echo "</table><h1>Preencha dados do Conteudo Programatico</h1><br /><br />
-            <table border=\"1\" align=\"center\" border-color=\"black\">
-            <tr>
-                <td>
-                    <b>Data</b>
-                </td>
-                <td>
-                    <b>Evento</b>
-                </td>
-            </tr>";
-        $conteudoAr = explode("\n", $_POST['contprogramatico']);//Cria uma array com cada participante
-        $i = 0;
-        foreach($conteudoAr as $c) {
-            if(strlen($c) <= 1)
-            {
-                unset($conteudoAr[$i]);//Remove do array cada participante sem nome
-            }
-            $i++;
-        }
-        $conteudoAr = array_values($conteudoAr);//Reorganiza a array
-        
-        foreach($conteudoAr as $dataConteudo) {
+            <table border=\"1\" align=\"center\"";
+
+//        $conteudoAr = explode("\n", $_POST['contprogramatico']);//Cria uma array com cada participante
+//        $i = 0;
+//        foreach($conteudoAr as $c) {
+//            if(strlen($c) <= 1)
+//            {
+//                unset($conteudoAr[$i]);//Remove do array cada participante sem nome
+//            }
+//            $i++;
+//        }
+//        $conteudoAr = array_values($conteudoAr);//Reorganiza a array
+//        
+//        foreach($conteudoAr as $dataConteudo) {
             ?>
             <tr>
-                <td>
+<!--                <td align="center">
                     <span class="item"><?php echo $dataConteudo ?></span>
-                </td>
+                </td>-->
                 <td>
-                    <textarea name="conteudo[]" rows="6" cols="50" wrap="off"></textarea>
+                    <textarea name="conteudo[]" rows="15" cols="100" wrap="on"></textarea>
                 </td>
             </tr>
             <?php
-        }
+//        }
         ?>
         </table><br /><br />
         
             <input type="hidden" name="evento" value="<?php echo $_POST['evento']; ?>" />
             <input type="hidden" name="departamento" value="<?php echo $_POST['departamento']; ?>" />
-            <input type="hidden" name="participantes" rows="20" cols="80" wrap="off" value="<?php echo $_POST['participantes']; ?>" />
-            <input type="hidden" name="contprogramatico" rows="20" cols="80" wrap="off" value="<?php echo $_POST['contprogramatico']; ?>" />
-            <input type="hidden" name="equipe" rows="20" cols="80" wrap="off" value="<?php echo $_POST['equipe']; ?>" />
+            <input type="hidden" name="participantes" value="<?php echo $_POST['participantes']; ?>" />
+            <input type="hidden" name="contprogramatico"value="<?php echo $_POST['contprogramatico']; ?>" />
+            <input type="hidden" name="equipe" value="<?php echo $_POST['equipe']; ?>" />
             <input type="hidden" name="dataimpressa" value="<?php echo $_POST['dataimpressa']; ?>"/>
             <input type="hidden" name="texto" value="<?php echo $_POST['texto']; ?>" />
             <input type="submit" value="Próximo" />       

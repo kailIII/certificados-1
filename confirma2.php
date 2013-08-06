@@ -1,3 +1,26 @@
+<!DOCTYPE html>
+<?php
+
+    session_start();
+    
+    if($_SESSION["Login"] != "YES") {
+        header("Location: index.php");
+    }
+    
+    function refinaArray($arrayAntiga) { //Função para remover valores vazios de uma textarea POST separada por \n e gerar outra
+        $novaArray = explode("\n", $arrayAntiga );
+        $i = 0;
+        foreach($novaArray as $p) {
+            if(strlen($p) <= 1)
+            {
+                unset($novaArray[$i]);//Remove do array cada participante sem nome
+            }
+            $i++;
+        }
+        array_values($novaArray);//Reorganiza a array
+        return $novaArray;
+    }
+?>
 <html>
     <head>   
         <link rel="stylesheet" type="text/css" href="style.css" />
@@ -7,26 +30,18 @@
     <body>
         <table border="1" align="center" border-color="black">
         <?php 
-        $participanteAr = explode("\n", $_POST['participantes']);
-        $i = 0;
-        foreach($participanteAr as $p) {
-            if(strlen($p) <= 1)
-            {
-                unset($participanteAr[$i]);
-            }
-        }
-        array_values($participanteAr);
+//        $participanteAr = explode("\n", $_POST['participantes']);
+//        $i = 0;
+//        foreach($participanteAr as $p) {
+//            if(strlen($p) <= 1)
+//            {
+//                unset($participanteAr[$i]);
+//            }
+//        }
+//        $participanteAr = array_values($participanteAr);
+        $participanteAr = refinaArray($_POST['participantes']);
         
-        $conteudoAr = explode("\n", $_POST['contprogramatico']);
-        $i = 0;
-        foreach($conteudoAr as $c) {
-            if(strlen($c) <= 1)
-            {
-                unset($conteudoAr[$i]);//Remove do array cada participante sem nome
-            }
-            $i++;
-        }
-        $conteudoAr = array_values($conteudoAr);//Reorganiza a array
+        $conteudo = $_POST['contprogramatico'];
         
         $eventoAr = $_POST['conteudo'];
         
@@ -40,16 +55,7 @@
 //        }
 //        $conteudoAr = array_values($conteudoAr);//Reorganiza a array
 //        
-        $equipeAr = explode("\n", $_POST['equipe']);
-        $i = 0;
-        foreach($participanteAr as $p) {
-            if(strlen($p) <= 1 )
-            {
-                unset($participanteAr[$i]);
-            }
-            $i++;
-        }
-        array_values($participanteAr);
+        $equipeAr = refinaArray($_POST['equipe']);
 
         
         echo "<h1>Confirme os dados já preenchidos</h1><br /><br />
@@ -83,16 +89,18 @@
         foreach ($participanteAr as $participante) {
             echo "<td>".$participante."</td></tr><tr>";            
         }
-        echo "</tr></span></tr>
-              <tr>
-                <td rowspan=\"".count($conteudoAr)."\"><span class=\"item\">Conteúdo Programático:</span>
-                </td>
-                <span class=\"dado\">";
-        foreach ($conteudoAr as $conteudo) {
-            echo "<td>".$conteudo."</td></tr><tr>";
-        }
-        echo "</tr></span></tr>
-              <tr>
+        echo "</tr></span></tr>";
+        
+//        echo "      <tr>
+//                <td rowspan=\"".count($conteudoAr)."\"><span class=\"item\">Conteúdo Programático:</span>
+//                </td>
+//                <span class=\"dado\">";
+//        foreach ($conteudoAr as $conteudo) {
+//            echo "<td>".$conteudo."</td></tr><tr>";
+//        }
+//        echo "</tr></span></tr>";
+        
+        echo "  <tr>
                 <td rowspan=\"".count($equipeAr)."\"><span class=\"item\">Equipe Executora:</span>
                 </td>
                 <span class=\"dado\">";
@@ -133,38 +141,28 @@
                     <b>Participante</b>
                 </td>
                 <td>
-                    <b>Data</b>
-                </td>
-                <td>
                     <b>Evento</b>
                 </td>
             </tr>
             <form method=\"post\" action=\"GerarPDF.php\" >";
         
-        $participanteAr = explode("\n", $_POST['participantes']);//Cria uma array com cada participante
-        $i = 0;
-        foreach($participanteAr as $p) {
-            if(strlen($p) <= 1)
-            {
-                unset($participanteAr[$i]);//Remove do array cada participante sem nome
-            }
-            $i++;
-        }
-        $participanteAr = array_values($participanteAr);//Reorganiza a array
         
         $part = 1;
         foreach($participanteAr as $participante) {
            echo "<tr>
-                    <td rowspan=\"".count($conteudoAr)."
+                    <td rowspan=\"".count($conteudo)."
                         <span class=\"item\">".$participante."</span>
                     </td>";
            $icont = 0;
-           foreach($conteudoAr as $conteudoData) {
-           echo "    <td>
-                           <input type=checkbox name=\"dataCont".$part."[]\" value=\"".$icont."\" >".$conteudoData."
-                     </td>
+//           foreach($conteudo as $conteudoData) {
+               
+//           echo "    <td>
+//                           <input type=checkbox name=\"dataCont".$part."[]\" value=\"".$icont."\" >".$conteudoData."
+//                     </td>";
+           
+           echo "
                      <td>
-                           <textarea name=\"conteudo".$part."[]\" rows=\"6\" cold=\"50\" wrap=\"off\">".$eventoAr[$icont]."</textarea>"."
+                           <textarea name=\"conteudo".$part."[]\" rows=\"15\" cols=\"70\" wrap=\"on\">".$eventoAr[$icont]."</textarea>"."
                      </td>
                  </tr>
                  <tr>";
@@ -172,15 +170,24 @@
            }
         echo "</tr>";
         $part++;
-        }
+//        }
         ?>
         </table><br /><br />
             <?php
+            
+        echo "<br>
+                <p>Tamanho da Fonte para Conteudo Programatico: <input type=\"text\" name=\"sizeconteudo\" />(tamanho padrão = 14)</p>
+                <p>Tamanho da Fonte para Equipe Executora: <input type=\"text\" name=\"sizeequipe\" />(tamanho padrão = 14)</p>
+        ";
+            
                 foreach($_POST['num'] as $num) {
                     echo "<input type=\"hidden\" name=\"num[]\" value=\"".$num."\" />";
                 }
                 foreach($_POST['fls'] as $fls) {
                     echo "<input type=\"hidden\" name=\"fls[]\" value=\"".$fls."\" />";
+                }
+                foreach($_POST['sobnum'] as $sobnum) {
+                    echo "<input type=\"hidden\" name=\"sobnum[]\" value=\"".$sobnum."\" />";
                 }
                 foreach($_POST['periodo'] as $periodo) {
                     echo "<input type=\"hidden\" name=\"periodo[]\"  value=\"".$periodo."\" />";

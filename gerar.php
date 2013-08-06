@@ -40,10 +40,11 @@
                 <label for="nomes">Participantes: </label>
                 <textarea name="participantes" rows="20" cols="80" wrap="off"></textarea>
             </p>
-            <p>
+<!--            <p>
                 <label for="conteudo">Conteúdo Programático[Datas]: </label>
                 <textarea name="contprogramatico" rows="20" cols="80" wrap="off"></textarea>
-            </p>
+            </p>-->
+                <input type="hidden" name="contprogramatico" value="Conteudo" />
             <p>
                 <label for="nomesequipe">Equipe Executora[Nomes]: </label>
                 <textarea name="equipe" rows="20" cols="80" wrap="off"></textarea>

@@ -1,5 +1,6 @@
 <?php
 
+    session_start();
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -17,10 +18,7 @@
             <p>Digite o login e a senha para acessar a ferramenta</p>
             <p>Login:<input type="text" name="login" /></p>
             <p>Senha:<input type="password" name="senha" /></p>    
-            <p><input type="submit" value="Acessar" /></p>      
+            <p><input type="submit" value="Acessar" /></p><br>     
         </form>
-        <?php 
-
-        ?>
     </body>
 </html>

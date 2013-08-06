@@ -10,7 +10,7 @@
         {
             session_start();
             $_SESSION["Login"] = "YES";
-            echo "<p>Logado com Sucesso!! Clique <a href='gerar.php'>aqui</a> para continuar.</p>";
+            header("Location: gerar.php");
         }
         else
         {
