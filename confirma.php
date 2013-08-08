@@ -187,39 +187,6 @@
             </tr>
             <?php
         }
-        echo "</table><h1>Preencha dados da Equipe Executora</h1><br /><br />
-            <table border=\"1\" align=\"center\" border-color=\"black\">
-            <tr>
-                <td>
-                    <b>Integrante</b>
-                </td>
-                <td>
-                    <b>Função</b>
-                </td>
-            </tr>";
-        $integranteAr = explode("\n", $_POST['equipe']);//Cria uma array com cada participante
-        $i = 0;
-        foreach($integranteAr as $in) {
-            if(strlen($in) <= 1)
-            {
-                unset($integranteAr[$i]);//Remove do array cada participante sem nome
-            }
-            $i++;
-        }
-        $integranteAr = array_values($integranteAr);//Reorganiza a array
-        
-        foreach($integranteAr as $integrante) {
-            ?>
-            <tr>
-                <td>
-                    <span class="item"><?php echo $integrante ?></span>
-                </td>
-                <td>
-                    <input type="text" name="funcao[]" />
-                </td>
-            </tr>
-            <?php
-        }
         
         echo "</table><h1>Preencha dados do Conteudo Programatico</h1><br /><br />
             <table border=\"1\" align=\"center\"";

@@ -164,12 +164,12 @@
                      <td>
                            <textarea name=\"conteudo".$part."[]\" rows=\"15\" cols=\"70\" wrap=\"on\">".$eventoAr[$icont]."</textarea>"."
                      </td>
-                 </tr>
-                 <tr>";
+                 </tr>";
            $icont++;
+           $part++;
            }
         echo "</tr>";
-        $part++;
+
 //        }
         ?>
         </table><br /><br />
@@ -178,6 +178,10 @@
         echo "<br>
                 <p>Tamanho da Fonte para Conteudo Programatico: <input type=\"text\" name=\"sizeconteudo\" />(tamanho padrão = 14)</p>
                 <p>Tamanho da Fonte para Equipe Executora: <input type=\"text\" name=\"sizeequipe\" />(tamanho padrão = 14)</p>
+                <br>
+                <p>Selecione ordem de impressão:</p>
+                <p><input type=\"radio\" name=\"ordem\" value=\"1\" checked > Normal(Frente e Verso)</p>
+                <p><input type=\"radio\" name=\"ordem\" value=\"2\"> Invertida(Verso e Frente)</p>
         ";
             
                 foreach($_POST['num'] as $num) {

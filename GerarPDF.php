@@ -38,6 +38,54 @@
         array_values($novaArray);//Reorganiza a array
         return $novaArray;
     }
+    function paginaFrente($pdf,$participante, $periodoAr, $cargaAr, $textoPrincipal, $n) {
+            //Pagina da Frente
+            $pdf->AddPage();
+            $pdf->SetLeftMargin(110);   //Margem esquerda do texto principal - á 110mm da borda esquerda
+            $pdf->SetRightMargin(20);   //Margem direita do texto principal - á 20mm da borda direita
+            $pdf->SetFont('Arial','',14);         
+            $pdf->SetXY(110,70); //Posicao inicial do texto do certificado -- posicao x = 110mm / posicao y = 70mm/   
+            
+            //Substitui as tags {nome} pelo nome do participante / {periodo} pelo periodo que a pessoa esteve participando / {carga} a carga horaria total que a pessoa participou
+            $texto = str_replace( array( "{nome}", "{periodo}", "{carga}" ), 
+                         array( "<b>".$participante."</b>", $periodoAr[$n-1], $cargaAr[$n-1] ),
+                $textoPrincipal );
+            
+            $texto = utf8_decode("<p>".$texto)."</p>";//Decodifica todo o texto para utf-8 para resolver alguns erros de 
+                                                      //caracteres, e adiciona tags de paragrafo no inicio e fim do texto        
+            $pdf->WriteTag(167, 9, $texto);//Escreve o texto principal no pdf
+            $pdf->SetXY(110,$pdf->GetY()+10);//Posiciona duas 1cm abaixo para escrever a data do certificado
+            $data = utf8_decode("Cuiabá-MT, ".$_POST['dataimpressa'].".");//Data da impressão
+            $pdf->Cell(167, 5, $data ,0,1,'R',false); //Adiciona a data da impressão no corpo do certificado
+    }
+            
+
+    function paginaTras($pdf,$sizeconteudo,$equipeAr,$sizeequipe,$sobnumAr,$numAr,$flsAr,$n) {
+            //Pagina de Tras
+            
+            $pdf->AddPage();//Adiciona pagina de trás do certificado
+            $pdf->SetXY(15,30);//Posiciona para escrever no conteudo programatico
+            
+            //Escreve o conteudos programaticos
+            $pdf->SetFont('arial','',$sizeconteudo);//Seleciona fonte normal arial para o conteudo programatico
+            $pdf->MultiCell(110,5,utf8_decode($_POST['conteudo'.$n][0]),0,'L');//Escreve o conteudo programatico
+            
+            $pdf->SetXY(154,30);//Posiciona para escrever a Equipe Executora
+            
+            foreach($equipeAr as $integrante) {//Escreve os integrantes da Equipe Executora
+                $pdf->SetFont('arial','',$sizeequipe);
+                $pdf->MultiCell(110,6,utf8_decode($integrante),0,'L');//Escreve o nome do integrante da equipe executora, em negrito - texto centralizado
+                $pdf->SetX(154);
+            }
+            
+            //Escreve o bloco de assinatura
+            
+            $pdf->SetXY(182, 140);//Posição para bloco de assinatura
+            $pdf->SetFont('arial','B','13'); //Seta fonte para o bloco - arial em negrito tamanho 13
+            $textoBlocoAssinatura = utf8_decode("UFMT - PROCEV - CODEX"."\n"."Certificado Registrado no livro"."\n\n"."nº.".$numAr[$n-1]."     fls.".$flsAr[$n-1].
+                    "\n\n\n"."sob nº. ".$sobnumAr[$n-1]."\n\n____________________\nResponsável p/ Registro\n");
+            $pdf->MultiCell(70, 5, $textoBlocoAssinatura, 1, 'C');//Imprime bloco de assinatura
+    }    
     
 //    function organizaConteudoProgramatico($n) { //Função que organiza conteudos programaticos escolhidos, em forma de array - $n é numero do participante - de 1 a n
 //        $cont = 0;
@@ -89,6 +137,8 @@
         $pdf = new PDF_WriteTag('L','mm'); //Inicializa o PDF
         $pdf->SetAutoPageBreak(0);
         
+        $ordem = $_POST['ordem'];//Variavel contendo a ordem de impressao - 1=normal / 2=inverso
+        
         //Cria os styles normal, negrito e negrito-italico
         $pdf->SetStyle("p","arial","N",13,"0,0,0",60);
         $pdf->SetStyle("b","arial","B",13,"0,0,0");
@@ -96,74 +146,16 @@
         
         $n = 1;//Variavel contendo o numero participante, de 1 a n
         foreach ($participanteAr as $participante) {
-            $pdf->AddPage();
-            $pdf->SetLeftMargin(110);   //Margem esquerda do texto principal - á 110mm da borda esquerda
-            $pdf->SetRightMargin(20);   //Margem direita do texto principal - á 20mm da borda direita
-            $pdf->SetFont('Arial','',14);
-            //$pdf->SetXY(0,0);
-            //$pdf->SetFillColor(200,220,255);
-            //$pdf->Rect(0,0,90,210,'F'); //Borda esquerda com simbolos da PROCEV - REMOVER DEPOIS
-            //$pdf->SetFillColor(195,195,195);
-            //$pdf->Rect(90,0,207,50,'F'); //Texto superior - REMOVER DEPOIS
-            //$pdf->SetFillColor(195,195,195);
-            //$pdf->Rect(90,160,207,50,'F'); //Texto inferior - REMOVER DEPOIS
-            
-            $pdf->SetXY(110,70); //Posicao inicial do texto do certificado -- posicao x = 110mm / posicao y = 70mm/   
-            
-            //Substitui as tags {nome} pelo nome do participante / {periodo} pelo periodo que a pessoa esteve participando / {carga} a carga horaria total que a pessoa participou
-            $texto = str_replace( array( "{nome}", "{periodo}", "{carga}" ), 
-                         array( "<b>".$participante."</b>", $periodoAr[$n-1], $cargaAr[$n-1] ),
-                $textoPrincipal );
-            
-            $texto = utf8_decode("<p>".$texto)."</p>";//Decodifica todo o texto para utf-8 para resolver alguns erros de 
-                                                      //caracteres, e adiciona tags de paragrafo no inicio e fim do texto        
-            $pdf->WriteTag(167, 9, $texto);//Escreve o texto principal no pdf
-            $pdf->SetXY(110,$pdf->GetY()+10);//Posiciona duas 1cm abaixo para escrever a data do certificado
-            $data = utf8_decode("Cuiabá-MT, ".$_POST['dataimpressa'].".");//Data da impressão
-            $pdf->Cell(167, 5, $data ,0,1,'R',false); //Adiciona a data da impressão no corpo do certificado
-            $pdf->AddPage();//Adiciona pagina de trás do certificado
-            $pdf->SetXY(15,30);//Posiciona para escrever no conteudo programatico
-            
-            //Escreve os conteudos programaticos
-            //
-//            if(isset($_POST['dataCont'.$n])){
-//                foreach($_POST['dataCont'.$n] as $key => $valor) { 
-//                    $pdf->SetFont('arial','BIU',$sizeconteudo); //Seleciona fonte em negrito-italico-sublinhado
-//                    $pdf->MultiCell(110,8,utf8_decode($ContProgAr[$valor]),0,'L');//Escreve a data do conteudo
-//                    $pdf->SetX(20);//Altera começo de posição para 20mm da borda esquerda
-            
-            $pdf->SetFont('arial','',$sizeconteudo);//Seleciona fonte normal arial
-            $pdf->MultiCell(110,5,utf8_decode($_POST['conteudo'.$n][0]),0,'L');//Escreve os conteudos da data
-//                    $pdf->SetXY(15,$pdf->GetY()+10);//Posiciona para proxima escrita de conteudo programatico
-//                }
-//            }
-            
-            $pdf->SetXY(154,30);//Posiciona para escrever a Equipe Executora
-            $numIntegrante = 0;//Variavel para pegar a posição do vetor funcaoAr que contem a função do integrante da equipe executora
-            
-            foreach($equipeAr as $integrante) {
-                $pdf->SetFont('arial','',$sizeequipe);
-                $pdf->MultiCell(110,6,utf8_decode($integrante),0,'L');//Escreve o nome do integrante da equipe executora, em negrito - texto centralizado
-                $pdf->SetX(154);
+
+            if($ordem == '1') {
+                paginaFrente($pdf,$participante, $periodoAr, $cargaAr, $textoPrincipal, $n);
+                paginaTras($pdf,$sizeconteudo,$equipeAr,$sizeequipe,$sobnumAr,$numAr,$flsAr,$n);
             }
-            
-            /*
-            foreach($equipeAr as $integrante) {
-                $pdf->SetFont('arial','B','15');
-                $pdf->MultiCell(110,6,utf8_decode($integrante),0,'C');//Escreve o nome do integrante da equipe executora, em negrito - texto centralizado
-                $pdf->SetX(154);
-                $pdf->SetFont('arial','','14');
-                $pdf->MultiCell(110,6,utf8_decode($funcaoAr[$numIntegrante]),0,'C');//Escreve a função do integrante da equipe executora
-                $pdf->SetXY(154,$pdf->GetY()+5);
-                $numIntegrante++;
+            else
+            {
+                paginaTras($pdf,$sizeconteudo,$equipeAr,$sizeequipe,$sobnumAr,$numAr,$flsAr,$n);
+                paginaFrente($pdf,$participante, $periodoAr, $cargaAr, $textoPrincipal, $n);                
             }
-             */
-            $pdf->SetXY(182, 140);//Posição para bloco de assinatura
-            $pdf->SetFont('arial','B','13');
-            $textoBlocoAssinatura = utf8_decode("UFMT - PROCEV - CODEX"."\n"."Certificado Registrado no livro"."\n\n"."nº.".$numAr[$n-1]."     fls.".$flsAr[$n-1].
-                    "\n\n\n"."sob nº. ".$sobnumAr[$n-1]."\n\n____________________\nResponsável p/ Registro\n");
-            $pdf->MultiCell(70, 5, $textoBlocoAssinatura, 1, 'C');//Imprime bloco de assinatura
-            
             $n++;//incrementa variavel que representa o numero do participante
         }
         $pdf->Output("Certificado.pdf", "I");//Gera a pagina PDF
