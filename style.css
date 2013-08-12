@@ -1,21 +1,23 @@
 body {
-        margin: 30px 30px 30px 30px;
-	background-color: lightcyan;
+/*        margin: 30px 30px 30px 30px;*/
+        margin-left: 100px;
+        margin-right: 100px;
         padding:30px;
-        border:10px;
-        border-color:black;
+/*        border:10px;
+        border-color:black;*/
 }
 h1 {
-    background-color: lightseagreen;
-    text-decoration-color: white;
-    text-align: center;
     font-family: arial;
+    color: white;
+    text-decoration-color: #E0EBFF;
+    text-align: center;
+    background-color: #000080;
 }
 
 table {
     font-family: arial;
-    font-size: 15px;
-    border-color: black;
+    font-size: 13px;
+    
 }
 
 td {

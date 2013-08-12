@@ -120,7 +120,6 @@
         $sobnumAr = $_POST['sobnum'];
         $periodoAr = $_POST['periodo'];
         $cargaAr = $_POST['carga'];
-        $funcaoAr = $_POST['funcao'];
   
         $participanteAr = refinaArray($_POST['participantes']);
         $ContProgAr = refinaArray($_POST['contprogramatico']);

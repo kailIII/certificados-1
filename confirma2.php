@@ -199,9 +199,6 @@
                 foreach($_POST['carga'] as $carga) {
                     echo "<input type=\"hidden\" name=\"carga[]\"  value=\"".$carga."\" />";
                 }
-                foreach($_POST['funcao'] as $funcao) {
-                    echo "<input type=\"hidden\" name=\"funcao[]\"  value=\"".$funcao."\" />";
-                }
             ?>
             <input type="hidden" name="evento" value="<?php echo $_POST['evento']; ?>" />
             <input type="hidden" name="departamento" value="<?php echo $_POST['departamento']; ?>" />

@@ -14,11 +14,14 @@
     </head>
     <body>
         
+        <table align="center" border="1px"><td>
+                <h1><p>Login para Ferramenta</p></h1>
         <form method="post" action="login.php">
             <p>Digite o login e a senha para acessar a ferramenta</p>
             <p>Login:<input type="text" name="login" /></p>
             <p>Senha:<input type="password" name="senha" /></p>    
             <p><input type="submit" value="Acessar" /></p><br>     
-        </form>
+        </form></td>
+        </table>
     </body>
 </html>
