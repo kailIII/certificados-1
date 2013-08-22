@@ -33,14 +33,16 @@
                 </tr>
                 <tr>
             <p> 
-                <td align="right"><label  for="departamento">Departamento:</label></td>
-                <td><input type="text" name="departamento" size="50" /></td>
+                <td align="right"><label  for="promovente">Promovente:</label></td>
+                <td><input type="text" name="promovente" size="50" /></td>
             </p>
             </tr>
                 <tr>
             <p>
-                <td align="right"><label for="textoPrincipal">Texto Principal: </label></td>
-                <td><textarea name="texto" rows="20" cols="80">{nome} {evento} {departamento} {periodo} {carga}</textarea></td>
+                <td align="right"><label for="textoPrincipal">Texto Principal: </label>
+                    <br><br><b>TAGS:</b>  <br>{evento}<br>{nome}<br>{período}<br>{carga}<br>{função}<br>{promovente}
+                </td>
+                <td><textarea name="texto" rows="20" cols="80"></textarea></td>
             </p>
                 </tr>
                 <tr>

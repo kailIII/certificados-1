@@ -62,10 +62,10 @@
               </tr>
               <tr>
                 <td>
-                    <span class=\"item\">Departamento:</span>
+                    <span class=\"item\">Promovente:</span>
                 </td>
                 <td>
-                    <span class=\"dado\">".$_POST['departamento']."</span>
+                    <span class=\"dado\">".$_POST['promovente']."</span>
                 </td>
               </tr>"/*
               <tr>
@@ -141,13 +141,16 @@
                     <b>Carga Horaria</b>
                 </td>
                 <td>
-                    <b>N°</b>
+                    <b>Função</b>
                 </td>
                 <td>
-                    <b>fls.</b>
+                    <b>N° do livro</b>
                 </td>
                 <td>
-                    <b>Sob n°.</b>
+                    <b>N° da folha</b>
+                </td>
+                <td>
+                    <b>N° do registro</b>
                 </td>
             </tr>
             <form method=\"post\" action=\"confirma2.php\" >";
@@ -174,15 +177,18 @@
                 </td>
                 <td>
                     <input type="text" name="carga[]" size="4" />
+                </td>                
+                <td>
+                    <input type="text" name="funcao[]" size="12" />
                 </td>
                 <td>
-                    <input type="text" name="num[]" size="5" />
+                    <input type="text" name="num[]" size="2" disabled value="" />
                 </td>
                 <td>
-                    <input type="text" name="fls[]" size="5" />
+                    <input type="text" name="fls[]" size="2" disabled value="" />
                 </td>
                 <td>
-                    <input type="text" name="sobnum[]" size="6" />
+                    <input type="text" name="sobnum[]" size="2"  disabled value="" />
                 </td>
             </tr>
             <?php
@@ -218,7 +224,7 @@
         </table><br /><br />
         
             <input type="hidden" name="evento" value="<?php echo $_POST['evento']; ?>" />
-            <input type="hidden" name="departamento" value="<?php echo $_POST['departamento']; ?>" />
+            <input type="hidden" name="promovente" value="<?php echo $_POST['promovente']; ?>" />
             <input type="hidden" name="participantes" value="<?php echo $_POST['participantes']; ?>" />
             <input type="hidden" name="contprogramatico"value="<?php echo $_POST['contprogramatico']; ?>" />
             <input type="hidden" name="equipe" value="<?php echo $_POST['equipe']; ?>" />

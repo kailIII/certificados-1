@@ -69,10 +69,10 @@
               </tr>
               <tr>
                 <td>
-                    <span class=\"item\">Departamento:</span>
+                    <span class=\"item\">Promovente:</span>
                 </td>
                 <td>
-                    <span class=\"dado\">".$_POST['departamento']."</span>
+                    <span class=\"dado\">".$_POST['promovente']."</span>
                 </td>
               </tr>"/*
               <tr>
@@ -184,15 +184,18 @@
                 <p><input type=\"radio\" name=\"ordem\" value=\"2\"> Invertida(Verso e Frente)</p>
         ";
             
-                foreach($_POST['num'] as $num) {
-                    echo "<input type=\"hidden\" name=\"num[]\" value=\"".$num."\" />";
+//                foreach($_POST['num'] as $num) {
+//                    echo "<input type=\"hidden\" name=\"num[]\" value=\"".$num."\" />";
+//                }
+//                foreach($_POST['fls'] as $fls) {
+//                    echo "<input type=\"hidden\" name=\"fls[]\" value=\"".$fls."\" />";
+//                }                
+                foreach($_POST['funcao'] as $funcao) {
+                    echo "<input type=\"hidden\" name=\"funcao[]\" value=\"".$funcao."\" />";
                 }
-                foreach($_POST['fls'] as $fls) {
-                    echo "<input type=\"hidden\" name=\"fls[]\" value=\"".$fls."\" />";
-                }
-                foreach($_POST['sobnum'] as $sobnum) {
-                    echo "<input type=\"hidden\" name=\"sobnum[]\" value=\"".$sobnum."\" />";
-                }
+//                foreach($_POST['sobnum'] as $sobnum) {
+//                    echo "<input type=\"hidden\" name=\"sobnum[]\" value=\"".$sobnum."\" />";
+//                }
                 foreach($_POST['periodo'] as $periodo) {
                     echo "<input type=\"hidden\" name=\"periodo[]\"  value=\"".$periodo."\" />";
                 }
@@ -201,7 +204,7 @@
                 }
             ?>
             <input type="hidden" name="evento" value="<?php echo $_POST['evento']; ?>" />
-            <input type="hidden" name="departamento" value="<?php echo $_POST['departamento']; ?>" />
+            <input type="hidden" name="promovente" value="<?php echo $_POST['promovente']; ?>" />
             <input type="hidden" name="participantes" rows="20" cols="80" wrap="off" value="<?php echo $_POST['participantes']; ?>" />
             <input type="hidden" name="contprogramatico" rows="20" cols="80" wrap="off" value="<?php echo $_POST['contprogramatico']; ?>" />
             <input type="hidden" name="equipe" rows="20" cols="80" wrap="off" value="<?php echo $_POST['equipe']; ?>" />
