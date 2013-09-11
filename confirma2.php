@@ -30,31 +30,13 @@
     <body>
         <table border="1" align="center" border-color="black">
         <?php 
-//        $participanteAr = explode("\n", $_POST['participantes']);
-//        $i = 0;
-//        foreach($participanteAr as $p) {
-//            if(strlen($p) <= 1)
-//            {
-//                unset($participanteAr[$i]);
-//            }
-//        }
-//        $participanteAr = array_values($participanteAr);
+
         $participanteAr = refinaArray($_POST['participantes']);
         
         $conteudo = $_POST['contprogramatico'];
         
         $eventoAr = $_POST['conteudo'];
-        
-//        $i = 0;
-//        foreach($conteudoAr as $c) {
-//            if(strlen($c) <= 1)
-//            {
-//                unset($conteudoAr[$i]);//Remove do array cada participante sem nome
-//            }
-//            $i++;
-//        }
-//        $conteudoAr = array_values($conteudoAr);//Reorganiza a array
-//        
+           
         $equipeAr = refinaArray($_POST['equipe']);
 
         
