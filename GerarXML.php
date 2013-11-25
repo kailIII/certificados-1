@@ -19,7 +19,7 @@
 
     foreach($participantesArray as $p)
     {
-		$xml = new DOMDocument("1.0","UTF-8");
+		$xml = new DOMDocument("1.0","utf-8");
 
 		$root = $xml->createElement("certificado");
 		$xml->appendChild($root);
@@ -61,12 +61,10 @@
 		$root->appendChild($equipe);
 
 		$xml->formatOutput = true;
-		//echo "<xmp>". $xml->saveXML() ."</xmp>";
+		
 		$xml->save("XML/certificado".$i.".xml") or die("Error");
 		$i++;
 	}
-
-	echo "Arquivo XML Gerado! Iniciando Download...";
 
 	for($f=1;$f<=$i;$f++)
 	{
