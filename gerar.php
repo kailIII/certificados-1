@@ -23,7 +23,7 @@
 
         <h1>Gerar Certificados</h1>
         <hr />
-        <form method="post" action="confirma.php" >
+        <form method="post" >
             <table padding="20px" border-color="white,white,white,white">
                 <tr>
             <p>
@@ -65,8 +65,7 @@
             </p>
                 </table>        
                     <br><br>
-                    <p align="center"><input type="submit" value="Próximo"/></p>
-
+                    <p align="center"><input type="submit" value="Próximo" action="confirma.php" /></p>
         </form>
     </body>
 </html>

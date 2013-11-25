@@ -153,7 +153,7 @@
                     <b>N° do registro</b>
                 </td>
             </tr>
-            <form method=\"post\" action=\"confirma2.php\" >";
+            <form method=\"post\" >";
         
         $participanteAr = explode("\n", $_POST['participantes']);//Cria uma array com cada participante
         $i = 0;
@@ -230,7 +230,7 @@
             <input type="hidden" name="equipe" value="<?php echo $_POST['equipe']; ?>" />
             <input type="hidden" name="dataimpressa" value="<?php echo $_POST['dataimpressa']; ?>"/>
             <input type="hidden" name="texto" value="<?php echo $_POST['texto']; ?>" />
-            <input type="submit" value="Próximo" />       
+            <input type="submit" value="Próximo" action="confirma2.php"  />       
         </form>
         
         
