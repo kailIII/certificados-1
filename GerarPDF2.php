@@ -2,6 +2,8 @@
 
     session_start();
 
+    require('fpdf/WriteTag.php');
+
     function convertem($term, $tp) { //Função para converter strings com acentos para MAIUSCULA - $tp = 1 para maiuscula / $tp = 0 para minuscula
         if ($tp == "1") $palavra = strtr(strtoupper($term),"àáâãäåæçèéêëìíîïðñòóôõö÷øùüúþÿ","ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÜÚÞß"); 
         elseif ($tp == "0") $palavra = strtr(strtolower($term),"ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÜÚÞß","àáâãäåæçèéêëìíîïðñòóôõö÷øùüúþÿ"); 
@@ -62,12 +64,10 @@
     
     
 
-    function GeradorPDF($participante, $textoPrincipal, $conteudo, $equipe, $tamanhoTexto, $tamanhoConteudo, $tamanhoEquipe
-        ,$ordemImpressao/*,$num,$fls,$sobnum  */
+    function GeradorPDF($pdf,$participante, $textoPrincipal, $conteudo, $equipe, $tamanhoTexto, $tamanhoConteudo, $tamanhoEquipe
+        ,$ordemImpressao, $i/*,$num,$fls,$sobnum  */
      )
-    {
-        require('fpdf/WriteTag.php');
-     
+    {  
 
         //Verifica se os tamanhos das fontes passados por parâmetro são numéricos, caso contrário se dá o valor padrão 14
         if(!is_numeric($tamanhoConteudo)) {
@@ -82,6 +82,7 @@
             $tamanhoTexto = '14';
         }
                 
+        /*
         $pdf = new PDF_WriteTag('L','mm'); //Inicializa o PDF
         $pdf->SetAutoPageBreak(0);
       
@@ -90,6 +91,8 @@
         $pdf->SetStyle("b","arial","B",13,"0,0,0");
         $pdf->SetStyle("bi","arial","BI",13,"0,0,0");
         
+        */
+
         if($ordemImpressao == '1') {
             paginaFrente($pdf,$participante, $textoPrincipal, $tamanhoTexto);
             paginaTras($pdf,$conteudo,$equipe,$tamanhoEquipe,$tamanhoConteudo/*,$num,$fls,$sobnum*/);
@@ -100,6 +103,36 @@
             paginaFrente($pdf,$participante, $textoPrincipal, $tamanhoTexto);                
         }
 
-        $pdf->Output("Certificado.pdf", "I");//Gera a pagina PDF
+        $pdf->Output("Certificado".$i.".pdf", "F");//Gera a pagina PDF
     }   
+
+    $zipname = './CertificadosPDF.zip';
+    $zip = new ZipArchive();
+    $zip->open($zipname, ZipArchive::CREATE);
+
+    $participantesArray = refinaArray($_POST['participantes']);
+    $i = 1;
+
+    foreach($participantesArray as $p)
+        {
+        $pdf = new PDF_WriteTag('L','mm'); //Inicializa o PDF
+        $pdf->SetAutoPageBreak(0);
+      
+        //Cria os styles normal, negrito e negrito-italico
+        $pdf->SetStyle("p","arial","N",13,"0,0,0",60);
+        $pdf->SetStyle("b","arial","B",13,"0,0,0");
+        $pdf->SetStyle("bi","arial","BI",13,"0,0,0"); 
+        GeradorPDF($pdf,$p,trim($_POST['texto'.$i]),trim($_POST['conteudo'.$i]),trim($_POST['equipe']),'14','14','14','1',$i);
+        $zip->addFile("Certificado".$i.".pdf");
+        $i++;
+    }
+
+    $zip->close();
+
+    //GERAR DOWNLOAD
+    header('Content-Type: application/zip');
+    header('Content-disposition: attachment; filename="certificados.zip"');
+    header('Content-Length: ' . filesize($zipname));
+    readfile($zipname);
+
 ?>

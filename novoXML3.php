@@ -58,7 +58,7 @@
             <input type="hidden" name="evento" value="<?php echo $_POST['evento']; ?>" />
             <input type="hidden" name="promovente" value="<?php echo $_POST['promovente']; ?>" />      
             <p><input type="button" onclick="submitForm('GerarXML.php')" value="Gerar pacote XML" />
-                <input type="button" onclick="submitForm('GerarPDF.php')" value="Gerar PDF para impressão" />
+                <input type="button" onclick="submitForm('GerarPDF2.php')" value="Gerar PDF para impressão" />
                 </form>
             <form method="post" action="novoXML1.php">
                 <input type="submit" value="Gerar novos Certificados" />
