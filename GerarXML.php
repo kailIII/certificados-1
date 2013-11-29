@@ -14,6 +14,7 @@
         return $novaArray;
     }
 
+
     $participantesArray = refinaArray($_POST['participantes']);
     $i = 1;
 
@@ -22,6 +23,10 @@
     $tempoAtual = time();
     $pasta = date('d-m-Y',$tempoAtual)." ".date('H',$tempoAtual)."h".date('i',$tempoAtual)."m".date('s',$tempoAtual)."s";
     mkdir("XML/".$pasta,0700);
+
+	$zipname = './XML/'.$pasta.'/Certificados.zip';
+	$zip = new ZipArchive();
+	$zip->open($zipname, ZipArchive::CREATE);
 
     foreach($participantesArray as $p)
     {
@@ -67,28 +72,35 @@
 		$root->appendChild($equipe);
 
 		$xml->formatOutput = true;
-		
-		$xml->save("XML/".$pasta."/certificado".$i.".xml") or die("Error");
+		$path = "XML/".$pasta."/certificado".$i.".xml";
+		$zip->addFile($path);
+
+		$xml->save($path) or die("Error");
+
 		$i++;
 	}
 
+	/*
 	for($f=1;$f<=$i;$f++)
 	{
 		$files[$f-1] = "XML/".$pasta."/certificado".$f.".xml";
 	}
 	//GERAR ARQUIVO .ZIP
-	$zipname = 'XML/'.$pasta.'/Certificados '.$pasta.'.zip';
-	$zipfilename = 'Certificados '.$pasta.'.zip';
+	$zipname = 'XML/'.$pasta.'/Certificados.zip';
+	$zipfilename = 'Certificados.zip';
 	$zip = new ZipArchive;
-	$zip->open($zipname, ZipArchive::CREATE);
+	$zip->open($zipname, ZipArchive::OVERWRITE);
 	foreach ($files as $file) {
 	  $zip->addFile($file);
 	}
 	$zip->close();
+	*/
+
+	$zip->close();
 
 	//GERAR DOWNLOAD
 	header('Content-Type: application/zip');
-	header('Content-disposition: attachment; filename='.$zipfilename);
+	header('Content-disposition: attachment; filename="certificados.zip"');
 	header('Content-Length: ' . filesize($zipname));
 	readfile($zipname);
 ?>
