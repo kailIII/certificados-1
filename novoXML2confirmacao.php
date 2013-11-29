@@ -18,39 +18,6 @@
     $numParticipantes = count($participantesArray);
     $equipeAr = refinaArray($_POST['equipe']);
 
-    $texto[0] = "";
-    $conteudo[0] = "";
-
-    if(isset($_POST['texto1']))
-    {
-        for($j=1;$j<=$numParticipantes;$j++)
-        {
-            $texto[$j] = $_POST['texto'.$j];    
-        }
-    }
-    else
-    {
-        for($j=1;$j<=$numParticipantes;$j++)
-        {
-            $texto[$j] = "";    
-        }        
-    }
-
-    if(isset($_POST['conteudo1']))
-    {
-        for($j=1;$j<=$numParticipantes;$j++)
-        {
-            $conteudo[$j] = $_POST['conteudo'.$j];    
-        }
-    }
-    else
-    {
-        for($j=1;$j<=$numParticipantes;$j++)
-        {
-            $conteudo[$j] = "";    
-        }        
-    }
-
 ?>
 
 <html>
@@ -61,8 +28,17 @@
     </head>
     <body>
         
+        <!-- Direcionar pagina para determinado botão clicado-->
+        <script>
+            function submitForm(action)
+            {
+                document.getElementById('form1').action = action;
+                document.getElementById('form1').submit();
+            }
+        </script>   
+
         <table align="center" border="1px" witdh="800px"><td>
-            <h1><p>GERAR XML - Passo 2</p></h1>
+            <h1><p>GERAR XML - Passo 2 - Confirmação</p></h1>
             <table align="center" width="400px" border="1px">
                 <tr>
                     <td colspan="2"><b>Evento:</b>  <?php echo $_POST['evento']; ?> </td>
@@ -87,19 +63,21 @@
                     <td><?php echo str_replace("\n","<br>",$_POST['equipe']); ?></td>
                 </tr>
             </table>
-        <form method="post" action="NovoXML2confirmacao.php">
+        <form id="form1" method="post">
             <br>
-            <p><h1>Digite os dados dos Participantes:</h1></p>
+            <p><h1>Confirme os dados dos Participantes para gerar os Certificados:</h1></p>
 
                 <?php
                     $i = 1;
                     foreach($participantesArray as $p)
                     {
                         echo "<table align=\"center\" border=\"1px\">";
-                        echo "<tr><td>PARTICIPANTE</td>         <td>".$p."</td></tr>";
-                        echo "<tr><td>TEXTO PRINCIPAL</td>      <td><textarea name=\"texto".$i."\" rows=\"20\" cols=\"80\">".$texto[$i]."</textarea></td></tr>";
-                        echo "<tr><td>CONTEUDO PROGRAMATICO</td><td><textarea name=\"conteudo".$i."\" rows=\"20\" cols=\"80\">".$conteudo[$i]."</textarea></td></tr>";
+                        echo "<tr><td>PARTICIPANTE</td><td>".$p."</td></tr>";
+                        echo "<tr><td>TEXTO PRINCIPAL</td><td>".$_POST['texto'.$i]."</td></tr>";
+                        echo "<tr><td>CONTEUDO PROGRAMATICO</td><td>".$_POST['conteudo'.$i]."</td></tr>";
                         echo "</table><br><br>";
+                        echo "<input type=\"hidden\" name=\"texto".$i."\" value=\"".$_POST['texto'.$i]."\">";
+                        echo "<input type=\"hidden\" name=\"conteudo".$i."\" value=\"".$_POST['conteudo'.$i]."\">";
                         $i++;
                     }
                 ?>
@@ -109,7 +87,8 @@
             <input type="hidden" name="dataEvento" value="<?php echo $_POST['dataEvento']; ?>" />
             <input type="hidden" name="evento" value="<?php echo $_POST['evento']; ?>" />
             <input type="hidden" name="promovente" value="<?php echo $_POST['promovente']; ?>" />      
-            <p><input type="submit" value="Próximo" /></p><br>     
+            <p> <input type="button" onclick="submitForm('novoXML2.php')" value="Retornar" />
+                <input type="button" onclick="submitForm('NovoXML3.php')" value="Finalizar" /><br>     
         </form></td>
         </table>
     </body>

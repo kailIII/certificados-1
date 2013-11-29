@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<certificado>
+  <evento>Simpósio de Realidade Aumentada</evento>
+  <promovente>Instituto de Computação</promovente>
+  <dataEvento>20/11/2013</dataEvento>
+  <participante>Gustavo</participante>
+  <texto>Texto</texto>
+  <conteudo>Cont</conteudo>
+  <equipe>Equipe</equipe>
+</certificado>

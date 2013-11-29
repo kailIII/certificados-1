@@ -1,7 +1,5 @@
 <?php
 
-    date_default_timezone_set('America/Cuiaba');
-
     session_start();
 
     function convertem($term, $tp) { //Função para converter strings com acentos para MAIUSCULA - $tp = 1 para maiuscula / $tp = 0 para minuscula
@@ -23,40 +21,35 @@
         array_values($novaArray);//Reorganiza a array
         return $novaArray;
     }
-    function paginaFrente($pdf,$participante, $textoPrincipal, $dataEvento) {
+    function paginaFrente($pdf,$participante, $textoPrincipal, $tamanhoTexto) {
             //Pagina da Frente
             $pdf->AddPage();
             $pdf->SetLeftMargin(110);   //Margem esquerda do texto principal - á 110mm da borda esquerda
             $pdf->SetRightMargin(20);   //Margem direita do texto principal - á 20mm da borda direita
-            $pdf->SetFont('Arial','',14);         
+            $pdf->SetFont('Arial','',$tamanhoTexto);         
             $pdf->SetXY(110,70); //Posicao inicial do texto do certificado -- posicao x = 110mm / posicao y = 70mm/   
             
-            $texto = utf8_decode("<p>".$textoPrincipal)."</p>";//Decodifica todo o texto para utf-8 para resolver alguns erros de 
+            $textoPrincipal = utf8_decode("<p>".$texto)."</p>";//Decodifica todo o texto para utf-8 para resolver alguns erros de 
                                                       //caracteres, e adiciona tags de paragrafo no inicio e fim do texto        
-            $pdf->WriteTag(167, 9, $texto);//Escreve o texto principal no pdf
-            $pdf->SetXY(110,$pdf->GetY()+10);//Posiciona duas 1cm abaixo para escrever a data do certificado
-            $data = utf8_decode("Cuiabá-MT, ".$dataEvento.".");//Data da impressão
-            $pdf->Cell(167, 5, $data ,0,1,'R',false); //Adiciona a data da impressão no corpo do certificado
+            $pdf->WriteTag(167, 9, $textoPrincipal);//Escreve o texto principal no pdf
     }
             
 
-    function paginaTras($pdf,$sizeconteudo,$conteudo,$equipe,$sizeequipe,$sobnumAr,$numAr,$flsAr) {
+    function paginaTras($pdf,$conteudo,$equipe,$tamanhoEquipe,$tamanhoConteudo/*,$num,$fls,$sobnum*/) {
             //Pagina de Tras
             
             $pdf->AddPage();//Adiciona pagina de trás do certificado
             $pdf->SetXY(15,30);//Posiciona para escrever no conteudo programatico
             
             //Escreve o conteudos programaticos
-            $pdf->SetFont('arial','',$sizeconteudo);//Seleciona fonte normal arial para o conteudo programatico
+            $pdf->SetFont('arial','',$tamanhoConteudo);//Seleciona fonte normal arial para o conteudo programatico
             $pdf->MultiCell(110,5,utf8_decode($conteudo),0,'L');//Escreve o conteudo programatico
             
             $pdf->SetXY(154,30);//Posiciona para escrever a Equipe Executora
             
             //Escreve os integrantes da Equipe Executora
-            $pdf->SetFont('arial','',$sizeequipe);
+            $pdf->SetFont('arial','',$tamanhoEquipe);
             $pdf->MultiCell(110,6,utf8_decode($equipe),0,'L');//Escreve o nome do integrante da equipe executora, em negrito - texto centralizado
-            $pdf->SetX(154);
-
             
             //Escreve o bloco de assinatura [DESATIVADO]
             
@@ -67,79 +60,46 @@
 //            $pdf->MultiCell(70, 5, $textoBlocoAssinatura, 1, 'C');//Imprime bloco de assinatura
     }    
     
-//    }
-      if(false)
-      {
+    
 
-      }
-
-//    if($_SESSION["Login"] != "YES") {
-//        header("Location: index.php");
-//    }
-    else
+    function GeradorPDF($participante, $textoPrincipal, $conteudo, $equipe, $tamanhoTexto, $tamanhoConteudo, $tamanhoEquipe
+        ,$ordemImpressao/*,$num,$fls,$sobnum  */
+     )
     {
         require('fpdf/WriteTag.php');
      
-        $xml = new DOMDocument();
-        $xml->load('XML/certificado2.xml');
 
-        /*
-
-        if(is_numeric($_POST['sizeconteudo'])) {
-           $sizeconteudo = $_POST['sizeconteudo']; 
-        }else{
-            $sizeconteudo = '14';
+        //Verifica se os tamanhos das fontes passados por parâmetro são numéricos, caso contrário se dá o valor padrão 14
+        if(!is_numeric($tamanhoConteudo) {
+           $tamanhoConteudo = '14'; 
         }
         
-        if(is_numeric($_POST['sizeequipe'])) {
-            $sizeequipe = $_POST['sizeequipe'];
-        }else{
-            $sizeequipe = '14';
+        if(!is_numeric($tamanhoEquipe) {
+            $tamanhoEquipe = '14';
         }
-
-        */
-        $sizeconteudo = '14';
-        $sizeequipe = '14';
-
         
-//        $numAr = $_POST['num'];
-//        $flsAr = $_POST['fls'];
-//        $sobnumAr = $_POST['sobnum'];
-        $numAr = "";
-        $flsAr = "";
-        $sobnumAr = "";
-
-        //$certif = $xml->getElementsByTagName('certificado')->item(0);
-
-        $participante = $xml->getElementsByTagName('participante')->item(0)->nodeValue;
-        $conteudo = $xml->getElementsByTagName('conteudo')->item(0)->nodeValue;
-        $equipe = $xml->getElementsByTagName('equipe')->item(0)->nodeValue;
-        $textoPrincipal = $xml->getElementsByTagName('texto')->item(0)->nodeValue;
-        $dataEvento = $xml->getElementsByTagName('dataEvento')->item(0)->nodeValue;
-
+        if(!is_numeric($tamanhoTexto) {
+            $tamanhoTexto = '14';
+        }
+                
         $pdf = new PDF_WriteTag('L','mm'); //Inicializa o PDF
         $pdf->SetAutoPageBreak(0);
-        
-        //$ordem = $_POST['ordem'];//Variavel contendo a ordem de impressao - 1=normal / 2=inverso
-        $ordem = 1;
-
+      
         //Cria os styles normal, negrito e negrito-italico
         $pdf->SetStyle("p","arial","N",13,"0,0,0",60);
         $pdf->SetStyle("b","arial","B",13,"0,0,0");
         $pdf->SetStyle("bi","arial","BI",13,"0,0,0");
         
-
-        if($ordem == '1') {
-            paginaFrente($pdf,$participante, $textoPrincipal, $dataEvento);
-            paginaTras($pdf,$sizeconteudo,$conteudo,$equipe,$sizeequipe,$sobnumAr,$numAr,$flsAr);
+        if($ordemImpressao == '1') {
+            paginaFrente($pdf,$participante, $textoPrincipal, $tamanhoTexto);
+            paginaTras($pdf,$conteudo,$equipe,$tamanhoEquipe,$tamanhoConteudo/*,$num,$fls,$sobnum*/);
         }
         else
         {
-            paginaTras($pdf,$sizeconteudo,$conteudo,$equipe,$sizeequipe,$sobnumAr,$numAr,$flsAr);
-            paginaFrente($pdf,$participante, $textoPrincipal, $dataEvento);                
+            paginaTras($pdf,$conteudo,$equipe,$tamanhoEquipe,$tamanhoConteudo/*,$num,$fls,$sobnum*/);
+            paginaFrente($pdf,$participante, $textoPrincipal, $tamanhoTexto);                
         }
 
-        
         $pdf->Output("Certificado.pdf", "I");//Gera a pagina PDF
     }   
 ?>
