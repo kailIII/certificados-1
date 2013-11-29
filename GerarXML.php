@@ -24,7 +24,7 @@
     $pasta = date('d-m-Y',$tempoAtual)." ".date('H',$tempoAtual)."h".date('i',$tempoAtual)."m".date('s',$tempoAtual)."s";
     mkdir("XML/".$pasta,0700);
 
-	$zipname = './XML/'.$pasta.'/Certificados.zip';
+	$zipname = './XML/'.$pasta.'/CertificadosXML.zip';
 	$zip = new ZipArchive();
 	$zip->open($zipname, ZipArchive::CREATE);
 
@@ -73,10 +73,8 @@
 
 		$xml->formatOutput = true;
 		$path = "XML/".$pasta."/certificado".$i.".xml";
-		$zip->addFile($path);
-
 		$xml->save($path) or die("Error");
-
+		$zip->addFile($path);
 		$i++;
 	}
 
