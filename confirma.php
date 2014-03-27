@@ -153,7 +153,7 @@
                     <b>N° do registro</b>
                 </td>
             </tr>
-            <form method=\"post\" >";
+            <form method=\"POST\"  action=\"confirma2.php\"  >";
         
         $participanteAr = explode("\n", $_POST['participantes']);//Cria uma array com cada participante
         $i = 0;
@@ -212,7 +212,7 @@
             ?>
             <tr>
 <!--                <td align="center">
-                    <span class="item"><?php echo $dataConteudo ?></span>
+                    <span class="item"><?php //echo $dataConteudo ?></span>
                 </td>-->
                 <td>
                     <textarea name="conteudo[]" rows="15" cols="100" wrap="on"></textarea>
@@ -230,7 +230,7 @@
             <input type="hidden" name="equipe" value="<?php echo $_POST['equipe']; ?>" />
             <input type="hidden" name="dataimpressa" value="<?php echo $_POST['dataimpressa']; ?>"/>
             <input type="hidden" name="texto" value="<?php echo $_POST['texto']; ?>" />
-            <input type="submit" value="Próximo" action="confirma2.php"  />       
+            <input type="submit" value="Próximo"/>       
         </form>
         
         
